@@ -251,7 +251,7 @@ void setup() {
     pinMode(red, OUTPUT);
     pinMode(green, OUTPUT);
     pinMode(blue, OUTPUT);
-    writeLeds(0,0,0);
+    writeLeds(0,0,0,0);
     Keyboard.begin(); // useful to detect host capslock state and LEDs
     Serial.begin(9600);
     delay(1000);  
@@ -404,9 +404,9 @@ void updateColors(){
 
 void delayBlinkLed(int r, int b, int g,  int numTimes, int blinkPeriod){
   for(int i = 0; i<numTimes;i++){
-    writeLeds(r,g,b);
+    writeLeds(r,g,b,0);
     delay(blinkPeriod/2);
-    writeLeds(0,0,0);
+    writeLeds(0,0,0,0);
     delay(blinkPeriod/2);
   }
   
@@ -415,18 +415,18 @@ void delayBlinkLed(int r, int b, int g,  int numTimes, int blinkPeriod){
 
 
 
-void writeLeds(int r, int g, int b){
+void writeLeds(int r, int g, int b, int minimum){
   redBrightness = r;
   greenBrightness = g;
   blueBrightness = b;
-  if(redBrightness<0){
-    redBrightness=0;
+  if(redBrightness<minimum){
+    redBrightness=minimum;
   }
-  if(greenBrightness<0){
-    greenBrightness=0;
+  if(greenBrightness<minimum){
+    greenBrightness=minimum;
   }
-  if(blueBrightness<0){
-    blueBrightness=0;
+  if(blueBrightness<minimum){
+    blueBrightness=minimum;
   }
     
     analogWrite(red, 255-redBrightness);
@@ -435,11 +435,11 @@ void writeLeds(int r, int g, int b){
 }
 
 
-void linearFade(int amount){
+void linearFade(int amount, int minimum){
   redBrightness-=amount;    
   greenBrightness-=amount;
   blueBrightness-=amount;
-  writeLeds(redBrightness,greenBrightness,blueBrightness);
+  writeLeds(redBrightness,greenBrightness,blueBrightness, minimum);
 }
 
 uint32_t Wheel(byte WheelPos) {
